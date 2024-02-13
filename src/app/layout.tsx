@@ -28,7 +28,7 @@ export default function RootLayout({
                 <li>Store</li>
               </Link>
               <Link href="/store/telefono">
-                <li>Category, telefono</li>
+                <li>Category: teléfono</li>
               </Link>
             </ul>
           </nav>
