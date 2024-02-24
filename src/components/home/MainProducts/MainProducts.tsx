@@ -1,36 +1,40 @@
-// import { useState } from "react";
+import Image from "next/image";
+import styles from "./MainProducts.module.sass";
 
 const getProducts = async () => {
-  const response = await fetch(
-    `${process.env.SHOPIFY_HOSTNAME}/admin/api/2023-10/products.json?`,
-    {
-      headers: {
-        "X-Shopify-Access-Token": process.env.SHOPIFY_API_KEY || "",
-      },
-    }
-  );
-  return await response.json();
-};
-
-type ProductsProps = {
-  id: string;
-  title: string;
+  try {
+    const response = await fetch(
+      `${process.env.SHOPIFY_HOSTNAME}/admin/api/2023-10/products.json`,
+      {
+        headers: new Headers({
+          "X-Shopify-Access-Token": process.env.SHOPIFY_API_KEY || "",
+        }),
+      }
+    );
+    const { products } = await response.json();
+    return products;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const MainProducts = async () => {
-  // const [products, setProducts] = useState<Array<ProductsProps>>([]);
-  const productsResponse = await getProducts();
-  console.log(productsResponse);
-  // setProducts(productsResponse.products);
+  const products = await getProducts();
 
   return (
-    <footer>
-      <h2>Main Products</h2>
-      {/* <ul>
-        {products.map((product) => {
-          return <li key={product.id}>{product.title}</li>;
+    <section className={styles.MainProducts}>
+      <h3>✨ New products released!</h3>
+      <div className={styles.MainProducts__grid}>
+        {products?.map((product) => {
+          const imageSrc = product.images[0].src;
+          return (
+            <article key={product.id}>
+              <p>{product.title}</p>
+              <Image src={imageSrc} fill alt={product.title} loading="eager" />
+            </article>
+          );
         })}
-      </ul> */}
-    </footer>
+      </div>
+    </section>
   );
 };
